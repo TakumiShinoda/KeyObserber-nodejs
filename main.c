@@ -4,6 +4,12 @@
 #include <string>
 #include "Defines.h"
 
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <iterator>
+#include "json-test/picojson.h"
+
 #define WIN32_LEAN_AND_MEAN
 
 struct KeyChecker{
@@ -29,6 +35,33 @@ struct KeyChecker{
   }
 };
 
+std::string getCharFromJson(std::string file, std::string key){
+  std::ifstream ifs(file, std::ios::in);
+
+  if (ifs.fail()) {
+      std::cerr << "failed to read " << file << std::endl;
+      return "";
+  }
+  const std::string json((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+  ifs.close();
+
+  picojson::value v;
+  const std::string err = picojson::parse(v, json);
+  if (err.empty() == false) {
+      std::cerr << err << std::endl;
+      return "";
+  }
+
+  picojson::object& obj = v.get<picojson::object>();
+
+  try{
+    std::string res = obj[key].get<std::string>();
+    return res;
+  }catch(...){
+    return "";
+  }
+}
+
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd){
   time_t now;
   struct KeyChecker KeyCheckers[sizeof(Keys) / sizeof(int)];
@@ -47,7 +80,13 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     for(int i = 0; i < sizeof(Keys) / sizeof(int); i++){
       if(KeyCheckers[i].get()){
         now = time(NULL);
-        printf("%ld %s\n", now, KeyCheckers[i].getChar().c_str());
+        std::string fromJson = getCharFromJson("keyLayouts.json", std::to_string(KeyCheckers[i].key));
+
+        if(fromJson.empty()){
+          std::cout << now << " " << KeyCheckers[i].getChar().c_str() << std::endl;
+        }else{
+          std::cout << now << " " << fromJson << std::endl;
+        }
       }
     }
   }
