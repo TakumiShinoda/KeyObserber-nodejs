@@ -2,7 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <iterator>
-#include "json-test/picojson.h"
+#include "../picojson.h"
 #include <string>
 
 std::string getCharFromJson(std::string file, std::string key){

@@ -33,7 +33,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
   time_t now;
 
   std::vector<std::string> jsonKeys;
-  std::ifstream ifs("keyLayouts.json", std::ios::in);
+  std::ifstream ifs("../keyLayouts.json", std::ios::in);
 
   if (ifs.fail()) {
       std::cerr << "failed to read " << "keyLayouts.json" << std::endl;
@@ -71,7 +71,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     for(int i = 0; i < sizeof(Keys) / sizeof(int); i++){
       if(KeyCheckers[i].get()){
         now = time(NULL);
-        std::string fromJson = getCharFromJson("keyLayouts.json", std::to_string(KeyCheckers[i].key));
+        std::string fromJson = getCharFromJson("../keyLayouts.json", std::to_string(KeyCheckers[i].key));
 
         if(fromJson.empty()){
           std::cout << now << " " << KeyCheckers[i].getChar().c_str() << " native" << std::endl;
