@@ -1,7 +1,13 @@
 #include <stdio.h>
 #include <time.h>
 #include <ApplicationServices/ApplicationServices.h>
-// #include "./json.hpp"
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <iterator>
+#include "../picojson.h"
+#include <string>
 
 char* keyCodeToReadableString (CGKeyCode keyCode) {
   switch ((int) keyCode) {
@@ -127,13 +133,10 @@ char* keyCodeToReadableString (CGKeyCode keyCode) {
 
 CGEventRef on_tap(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon){
   CGKeyCode key = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
-
   time_t now;
   time(&now);
-  printf("keyEvent ");
-  printf("%d ", (int)now);
-  // printf("%d", key);
-  printf("%s", keyCodeToReadableString(key));
+
+  std::cout << now << " " << keyCodeToReadableString(key) <<std::endl;
   fflush(stdout);
   return event;
 }

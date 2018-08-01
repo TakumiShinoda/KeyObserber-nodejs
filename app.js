@@ -1,7 +1,7 @@
-const mod = require('./module/module');
+const mod = require('./module/KeyObserber');
 
 
-mod.setPasswd("123456");
+mod.setPasswd("12356");
 mod.checkPasswd()
   .then(() => {
     console.log("suc");
