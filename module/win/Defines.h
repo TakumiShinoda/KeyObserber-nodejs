@@ -25,7 +25,8 @@ std::string getCharFromJson(std::string file, std::string key){
   picojson::object& obj = v.get<picojson::object>();
 
   try{
-    std::string res = obj[key].get<std::string>();
+    picojson::array& resArr = obj[key].get<picojson::array>();
+    std::string res = resArr[0].get<std::string>();
     return res;
   }catch(...){
     return "";
