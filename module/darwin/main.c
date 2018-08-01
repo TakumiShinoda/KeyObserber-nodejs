@@ -131,12 +131,44 @@ char* keyCodeToReadableString (CGKeyCode keyCode) {
   return "<unknown>";
 }
 
+std::string getCharFromJson(std::string file, std::string key){
+  std::ifstream ifs(file, std::ios::in);
+
+  if (ifs.fail()) {
+      std::cerr << "failed to read " << file << std::endl;
+      return "";
+  }
+  const std::string json((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+  ifs.close();
+
+  picojson::value v;
+  const std::string err = picojson::parse(v, json);
+  if (err.empty() == false) {
+      std::cerr << err << std::endl;
+      return "";
+  }
+
+  picojson::object& obj = v.get<picojson::object>();
+
+  try{
+    std::string res = obj[key].get<std::string>();
+    return res;
+  }catch(...){
+    return "";
+  }
+}
+
 CGEventRef on_tap(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon){
   CGKeyCode key = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
+  std::string keyFromJson = getCharFromJson("module/keyLayout-darwin.json", std::to_string(key));
   time_t now;
   time(&now);
 
-  std::cout << now << " " << keyCodeToReadableString(key) <<std::endl;
+  if(!keyFromJson.empty()){
+    std::cout << now << " " << keyFromJson << " json" <<std::endl;
+  }else{
+    std::cout << now << " " << keyCodeToReadableString(key) << " native" << std::endl;
+  }
   fflush(stdout);
   return event;
 }

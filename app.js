@@ -1,7 +1,7 @@
 const mod = require('./module/KeyObserber');
 
 
-mod.setPasswd("12356");
+mod.setPasswd("123456");
 mod.checkPasswd()
   .then(() => {
     console.log("suc");
