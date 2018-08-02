@@ -151,7 +151,8 @@ std::string getCharFromJson(std::string file, std::string key){
   picojson::object& obj = v.get<picojson::object>();
 
   try{
-    std::string res = obj[key].get<std::string>();
+    picojson::array& resArr = obj[key].get<picojson::array>();
+    std::string res = resArr[1].get<std::string>();
     return res;
   }catch(...){
     return "";
@@ -160,7 +161,7 @@ std::string getCharFromJson(std::string file, std::string key){
 
 CGEventRef on_tap(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon){
   CGKeyCode key = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
-  std::string keyFromJson = getCharFromJson("module/keyLayout-darwin.json", std::to_string(key));
+  std::string keyFromJson = getCharFromJson("module/keyLayouts.json", std::to_string(key)); // module/keyLayouts.json
   time_t now;
   time(&now);
 
