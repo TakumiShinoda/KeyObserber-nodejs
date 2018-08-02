@@ -64,11 +64,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 
   while(true){
-    for(int i = 0; i < sizeof(Keys) / sizeof(int); i++){
+    for(int i = 0; i < (int)jsonKeys.size(); i++){
       KeyCheckers[i].state = GetAsyncKeyState(KeyCheckers[i].key);
     }
 
-    for(int i = 0; i < sizeof(Keys) / sizeof(int); i++){
+    for(int i = 0; i < (int)jsonKeys.size(); i++){
       if(KeyCheckers[i].get()){
         now = time(NULL);
         std::string fromJson = getCharFromJson("../keyLayouts.json", std::to_string(KeyCheckers[i].key));
