@@ -52,11 +52,18 @@ module.exports = {
       var exec = spawn(__dirname + '\\win\\keylogger.exe');
 
       exec.stderr.on('data', (data) => {
-        console.log("Error");
         errCallback(data);
       });
 
-      exec.stdout.on('data', callback);
+      exec.stdout.on('data', (data) => {
+        data = data.toString();
+
+        if(data.toString().slice(-1) == '\n'){
+          callback(data.slice(0, -2));
+        }else{
+          callback(data);
+        }
+      });
     }else if(Platform == 'darwin'){
       var exec = spawn('echo', [Passwd, '|', 'sudo', '-S', './module/darwin/keyEvents'], {shell: true});
 
