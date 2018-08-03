@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <string>
+#include <unistd.h>
 #include "Defines.h"
 
 #define WIN32_LEAN_AND_MEAN
@@ -32,11 +33,15 @@ struct KeyChecker{
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd){
   time_t now;
 
+  int pathsize = 512;
+  char cdbuff[pathsize];
+
+  getcwd(cdbuff, pathsize);
   std::vector<std::string> jsonKeys;
-  std::ifstream ifs("../keyLayouts.json", std::ios::in);
+  std::ifstream ifs(strcat(cdbuff, "\\module\\keyLayouts.json"), std::ios::in);
 
   if (ifs.fail()) {
-      std::cerr << "failed to read " << "keyLayouts.json" << std::endl;
+      std::cerr << "failed to read " << cdbuff << "keyLayouts.json" << std::endl;
   }else{
     const std::string json((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
     ifs.close();
@@ -71,7 +76,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     for(int i = 0; i < (int)jsonKeys.size(); i++){
       if(KeyCheckers[i].get()){
         now = time(NULL);
-        std::string fromJson = getCharFromJson("../keyLayouts.json", std::to_string(KeyCheckers[i].key));
+        std::string fromJson = getCharFromJson(cdbuff, std::to_string(KeyCheckers[i].key));
 
         if(fromJson.empty()){
           std::cout << now << " " << KeyCheckers[i].getChar().c_str() << " native" << std::endl;

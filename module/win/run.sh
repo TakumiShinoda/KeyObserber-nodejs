@@ -1,3 +1,2 @@
-rm keylogger.exe
-g++ ./main.c -o keylogger.exe
+sh compile.sh
 ./keylogger.exe
