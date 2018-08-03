@@ -1,4 +1,4 @@
-const mod = require('./module/KeyObserber');
+const mod = require('./module/KeyObserber-darwin');
 
 
 mod.setPasswd("123456");
