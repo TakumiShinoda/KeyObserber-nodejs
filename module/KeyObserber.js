@@ -73,7 +73,15 @@ module.exports = {
         }
       });
 
-      exec.stdout.on('data', callback);
+      exec.stdout.on('data', (data) => {
+        data = data.toString();
+
+        if(data.slice(-1) == '\n'){
+          callback(data.slice(0, -1));
+        }else{
+          callback(data);
+        }
+      });
     }else{
       errCallback({code: -1, mes: 'This Method is not available on OperatingSystem.'});
     }
